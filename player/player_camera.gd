@@ -13,7 +13,7 @@ var rotation_velocity : Vector2
 
 func _ready():
 	# MOUSE
-	mouse_sensitivity = player.mouse_sensitivity
+	mouse_sensitivity = player.mouse_sensitivity / 100
 	mouse_smoothness = remap(player.mouse_sensitivity, 0,10,0, 1.0)
 	
 	# HEAD BOOBING
@@ -108,9 +108,3 @@ func dynamic_fov(delta):
 		self.fov = lerp(self.fov, running_fov, delta * fov_lerp_speed)
 	elif self.fov != default_fov:
 		self.fov = lerp(self.fov, default_fov, delta * fov_lerp_speed)
-
-
-
-
-
-

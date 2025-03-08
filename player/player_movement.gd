@@ -13,53 +13,53 @@ var state: PlayerState
 @export_group("Movement")
 
 @export_group("Movement/General")
-@export_range(1, 60, 0.1) var walk_movement_speed: float = 4
+@export_range(1, 60, 0.1) var walk_movement_speed: float = 1.8
 @export_range(0.1, 30, 0.1) var gravity: float = 15.5
 
 @export_group("Movement/Acceleration")
 @export_range(0.1, 60, 0.1) var horizontal_air_acceleration: float = 3
-@export_range(0.1, 60, 0.1) var horizontal_normal_acceleration: float = 6
+@export_range(0.1, 60, 0.1) var horizontal_normal_acceleration: float = 4
 @export_range(0.1, 60, 0.1) var horizontal_air_deceleration: float = 3
 @export_range(0.1, 60, 0.1) var horizontal_normal_deceleration: float = 8
 
 @export_group("Movement/Run")
 @export var running: bool = true
-@export_range(1, 60, 0.1) var run_movement_speed: float = 6
+@export_range(1, 60, 0.1) var run_movement_speed: float = 3.0
 @export_group("Movement/Run/DynamicFov")
 @export var dymanic_fov: bool = true
-@export_range(1, 100, 1) var fov_lerp_speed: float = 4 
-@export_range(50, 120, 1) var default_fov: float = 75
-@export_range(50, 120, 1) var running_fov: float = 80
+@export_range(1, 100, 1) var fov_lerp_speed: float = 3
+@export_range(50, 120, 1) var default_fov: float = 78
+@export_range(50, 120, 1) var running_fov: float = 83
 
 @export_group("Movement/Crouch")
 @export var crouching: bool = true
-@export_range(1, 60, 0.1) var crouch_movement_speed: float = 2
-@export_range(0.1, 50, 0.1) var crouch_speed: float = 12
+@export_range(1, 60, 0.1) var crouch_movement_speed: float = 1.2
+@export_range(0.1, 50, 0.1) var crouch_speed: float = 5.2
 @export_range(0.1, 10, 0.1) var crouching_player_height: float = 1.0
 
 @export_group("Movement/Jump")
 @export var jumping: bool = true
-@export_range(0.1, 30, 0.1) var jump_force: float = 5.7
+@export_range(0.1, 30, 0.1) var jump_force: float = 4.0
 
 # FOR OTHER SCRIPTS
 @export_group("Mouse")
-@export_range(0.01, 1, 0.01) var mouse_sensitivity: float = 0.09
+@export_range(1, 100, 1) var mouse_sensitivity: float = 9
 
 @export_group("HeadBoobing")
 @export var headbob: bool = true
-@export_range(0.1, 30, 0.1) var hb_lerp_speed = 10.0
+@export_range(0.1, 30, 0.1) var hb_lerp_speed = 3.0
 @export_group("HeadBoobing/speed")
-@export_range(0.1, 30, 0.1) var hb_running_speed = 18.0 
-@export_range(0.1, 30, 0.1) var hb_walking_speed = 14.0
-@export_range(0.1, 30, 0.1) var hb_crouching_speed = 10.0
+@export_range(0.1, 30, 0.1) var hb_running_speed = 16.0 
+@export_range(0.1, 30, 0.1) var hb_walking_speed = 12.0
+@export_range(0.1, 30, 0.1) var hb_crouching_speed = 8.0
 @export_group("HeadBoobing/intensity")
-@export_range(0.1, 30, 0.1) var hb_running_intensity = 0.12
-@export_range(0.1, 30, 0.1) var hb_walking_intensity = 0.05
-@export_range(0.1, 30, 0.1) var hb_crouching_intensity = 0.05
+@export_range(0.01, 30, 0.01) var hb_running_intensity = 0.1
+@export_range(0.01, 30, 0.01) var hb_walking_intensity = 0.08
+@export_range(0.01, 30, 0.01) var hb_crouching_intensity = 0.07
 
-var movement_speed
-var horizontal_acceleration
-var horizontal_deceleration
+var movement_speed: float
+var horizontal_acceleration: float
+var horizontal_deceleration: float
 
 var initial_player_height: float
 var initial_head_height: float
@@ -118,10 +118,10 @@ func _physics_process(delta):
 	
 	move_and_slide()
 
-@onready var player_collision_shape = $CollisionShape3D
-@onready var player_head = $Head
+@onready var player_collision_shape: CollisionShape3D = $CollisionShape3D
+@onready var player_head: Node3D = $Head
 
-@onready var head_raycast = $HeadRayCast
+@onready var head_raycast: RayCast3D = $HeadRayCast
 
 func crouch(delta):
 	
@@ -132,10 +132,11 @@ func crouch(delta):
 		player_collision_shape.shape.height = lerp(player_collision_shape.shape.height, crouching_player_height, delta * crouch_speed)
 		player_head.position.y = lerp(player_head.position.y, (initial_player_height-crouching_player_height) / 2 + (crouching_player_height / 4) * 3, delta * crouch_speed)
 		head_raycast.position.y = lerp(head_raycast.position.y, (initial_player_height-crouching_player_height) / 2 + crouching_player_height, delta * crouch_speed)
-	elif !head_raycast.is_colliding():
+	elif !head_raycast.is_colliding() and !is_on_ceiling():
 		player_collision_shape.shape.height = lerp(player_collision_shape.shape.height, initial_player_height, delta * crouch_speed)
 		player_head.position.y = lerp(player_head.position.y, initial_head_height, delta * crouch_speed)
 		head_raycast.position.y = lerp(head_raycast.position.y, initial_player_height, delta * crouch_speed)
+	
 	
 	if head_raycast.is_colliding() and is_on_floor():
 		state = PlayerState.crouching

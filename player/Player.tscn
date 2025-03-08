@@ -10,7 +10,7 @@ height = 1.8
 [node name="Player" type="CharacterBody3D"]
 wall_min_slide_angle = 0.174533
 script = ExtResource("1_bttu6")
-running_fov = 82.0
+fov_lerp_speed = 1.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
