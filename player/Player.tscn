@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://cpugdfgrceeln"]
+
+[ext_resource type="Script" uid="uid://b08pfv02p7f0l" path="res://player/player_movement.gd" id="1_bttu6"]
+[ext_resource type="Script" uid="uid://7dg68uhwcyil" path="res://player/player_camera.gd" id="2_ltith"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ku5fn"]
+radius = 0.4
+height = 1.8
+
+[node name="Player" type="CharacterBody3D"]
+wall_min_slide_angle = 0.174533
+script = ExtResource("1_bttu6")
+running_fov = 82.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_ku5fn")
+
+[node name="HeadRayCast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+target_position = Vector3(0, 0.05, 0)
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+
+[node name="Eyes" type="Node3D" parent="Head"]
+
+[node name="InteractRayCast" type="RayCast3D" parent="Head/Eyes"]
+target_position = Vector3(0, 0, -4)
+collision_mask = 2
+
+[node name="Camera3D" type="Camera3D" parent="Head/Eyes"]
+script = ExtResource("2_ltith")
+head_nodepath = NodePath("../..")
+player_nodepath = NodePath("../../..")
+
+[node name="Hand" type="Node3D" parent="Head/Eyes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.19, -0.12, -0.28)
