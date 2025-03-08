@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://vhgrb8mn2rpq"]
+
+[ext_resource type="PackedScene" uid="uid://cpugdfgrceeln" path="res://player/Player.tscn" id="1_emsf7"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_emsf7"]
+
+[sub_resource type="Sky" id="Sky_eu5n7"]
+sky_material = SubResource("ProceduralSkyMaterial_emsf7")
+
+[sub_resource type="Environment" id="Environment_qiymq"]
+background_mode = 2
+sky = SubResource("Sky_eu5n7")
+
+[node name="PrototypeWorld" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_qiymq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.575005, 0.81815, 0, -0.81815, 0.575005, 0, 0, 0)
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+size = Vector3(10, 0.1, 10)
+
+[node name="Player" parent="." instance=ExtResource("1_emsf7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.777101, 0)
